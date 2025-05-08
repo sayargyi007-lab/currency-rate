@@ -1,6 +1,7 @@
 import express from 'express';
 import cors from 'cors'
 import route from "./routes/rate.js"
+import paymentRoute from "./routes/paymentMethod.js"
 
 const app = express()
 
@@ -23,5 +24,6 @@ app.use(express.urlencoded({extended:true, limit:"16kb"}))
 app.use(express.static("public"))
 
 app.use("/api",route)
+app.use("/payment",paymentRoute)
 
 export {app};
