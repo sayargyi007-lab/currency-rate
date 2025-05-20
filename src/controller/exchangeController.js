@@ -54,3 +54,20 @@ export const sellController = async (req,res)=>{
         return res.status(500).json({message:"Fail to fetch sell rate"})
     }
 }
+
+export const deleteController = async(req, res)=>{
+
+    const {currency} = req.params
+    if(!currency){
+        return res.status(400).json({message:"Currency is required"})
+    }
+
+    try {
+        const deleteCurrency = await Exchange.findOneAndDelete({currency: currency.toUpperCase()})
+
+        return res.status(200).json({message:`${currency} is deleted successfully`})
+
+    } catch (error) {
+        res.status(500).json({message:"Internal Server error at deleting currency"})
+    }
+}

@@ -1,5 +1,7 @@
 import { Exchange } from "../model/exchange.js"
 import { Payment } from "../model/paymentMethod.js"
+import { uploadToCloudinary } from "../utils/cloudinary.js"
+import fs from "fs"
 
 export const getPaymentMethodByCurrency = async(req,res)=>{
     const {currency} = req.params
@@ -27,7 +29,19 @@ export const deletePaymentMethod = async (req, res) => {
 
 
 export const upsertPaymentMethod = async (req, res) => {
-  const { currency, qrImageUrl, bank } = req.body
+  console.log("BODY:", req.body);
+console.log("FILES:", req.files);
+
+  const { currency,  accountName, accountNumber, bankName  } = req.body
+
+   let qrImageUrl = ""
+   const qrImageUrl_path = req.files.qrImageUrl?.[0].path;
+
+
+  if(!currency ||   !accountName || !accountNumber || !bankName){
+    return res.status(400).json({message:"All fields are required"})
+  }
+
 
   try {
     
@@ -36,6 +50,11 @@ export const upsertPaymentMethod = async (req, res) => {
       return res.status(404).json({ message: "Please add that currency in the Exchange Rate" })
     }
 
+    if(qrImageUrl_path){
+      qrImageUrl = await uploadToCloudinary(qrImageUrl_path)
+    }
+
+    const bank = {accountName, accountNumber, bankName }
     
     const updatedPayment = await Payment.findOneAndUpdate(
       { currency: currency.toUpperCase() },
@@ -46,6 +65,7 @@ export const upsertPaymentMethod = async (req, res) => {
     res.status(200).json({ message: "Payment method is updated/added successfully", updatedPayment })
 
   } catch (error) {
+    fs.unlinkSync(qrImageUrl)
     res.status(500).json({ message: 'Error updating/adding payment method', error })
   }
 }
