@@ -65,16 +65,8 @@ console.log("FILES:", req.files);
     res.status(200).json({ message: "Payment method is updated/added successfully", updatedPayment })
 
   } catch (error) {
-    if (qrImageUrl_path) {
-      try {
-        fs.unlinkSync(qrImageUrl_path);
-      } catch (unlinkErr) {
-        console.error("Error deleting temp file:", unlinkErr.message);
-      }
-    }
-
-    console.error("Upload error:", error);
-    return res.status(500).json({ message: "Error updating/adding payment method", error });
-  
+    
+    fs.unlinkSync(qrImageUrl)
+    res.status(500).json({ message: 'Error updating/adding payment method', error })
   }
 }

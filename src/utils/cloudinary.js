@@ -13,12 +13,14 @@ dotenv.config()
 
 export const uploadToCloudinary =async(filePath)=>{
     try {
+        if(!filePath) return null
         const uploadUrl = await cloudinary.uploader.upload(filePath,{
             resource_type:"auto"
         })
         console.log("file upload complete",uploadUrl.url)
-        fs.unlinkSync(filePath)
         console.log(filePath)
+        fs.unlinkSync(filePath)
+        
         return uploadUrl.url
         
     } catch (error) {
