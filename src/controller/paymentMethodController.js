@@ -37,7 +37,7 @@ export const upsertPaymentMethod = async (req, res) => {
   const { currency, accountName, accountNumber, bankName } = req.body;
 
   let qrImageUrl = "";
-  const qrImageUrl_path = req.files.qrImageUrl?.[0]?.path;
+  const qrImageUrl_path = req.files.qrImageUrl?.[0].path;
 
   if (!currency || !accountName || !accountNumber || !bankName) {
     return res.status(400).json({ message: "All fields are required" });
@@ -50,8 +50,15 @@ export const upsertPaymentMethod = async (req, res) => {
     }
 
     if (qrImageUrl_path && fs.existsSync(qrImageUrl_path)) {
-      qrImageUrl = await uploadToCloudinary(qrImageUrl_path);
-      fs.unlinkSync(qrImageUrl_path); // remove local temp file after upload
+     try {
+       qrImageUrl = await uploadToCloudinary(qrImageUrl_path);
+       
+     } catch (error) {
+      console.log(error);
+      
+      fs.unlink(qrImageUrl_path);
+
+     } // remove local temp file after upload
     }
 
     const bank = { accountName, accountNumber, bankName };
