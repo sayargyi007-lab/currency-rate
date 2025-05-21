@@ -4,9 +4,10 @@ import { connectDb } from "./db/index.js"
 import fs from "fs"
 import path from "path"
 
-const tmpDir = path.join(process.cwd(), 'tmp');
+const tmpDir = path.join(process.cwd(), './tmp');
 if (!fs.existsSync(tmpDir)) {
-  fs.mkdirSync(tmpDir);
+  fs.mkdirSync(tmpDir, { recursive: true });
+  console.log("Created tmp directory at:", tmpDir);
 }
 
 dotenv.config({
