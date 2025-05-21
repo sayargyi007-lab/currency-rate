@@ -9,6 +9,7 @@ if (!fs.existsSync(tmpDir)) {
   fs.mkdirSync(tmpDir, { recursive: true });
   console.log("Created tmp directory at:", tmpDir);
 }
+console.log("TMP folder initialized at:", tmpDir);
 
 dotenv.config({
     path:".env"
