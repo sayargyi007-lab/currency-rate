@@ -28,7 +28,7 @@ export const deletePaymentMethod = async (req, res) => {
 
 
 
-import fs from "fs"
+
 
 export const upsertPaymentMethod = async (req, res) => {
   console.log("BODY:", req.body);
@@ -78,3 +78,47 @@ export const upsertPaymentMethod = async (req, res) => {
     });
   }
 };
+
+
+// export const upsertPaymentMethod = async (req, res) => {
+//   console.log("BODY:", req.body);
+// console.log("FILES:", req.files);
+
+//   const { currency,  accountName, accountNumber, bankName  } = req.body
+
+//    let qrImageUrl = ""
+//    const qrImageUrl_path = req.files.qrImageUrl?.[0].path;
+
+
+//   if(!currency ||   !accountName || !accountNumber || !bankName){
+//     return res.status(400).json({message:"All fields are required"})
+//   }
+
+
+//   try {
+    
+//     const existedInExchange = await Exchange.findOne({ currency: currency.toUpperCase() })
+//     if (!existedInExchange) {
+//       return res.status(404).json({ message: "Please add that currency in the Exchange Rate" })
+//     }
+
+//     if(qrImageUrl_path){
+//       qrImageUrl = await uploadToCloudinary(qrImageUrl_path)
+//     }
+
+//     const bank = {accountName, accountNumber, bankName }
+    
+//     const updatedPayment = await Payment.findOneAndUpdate(
+//       { currency: currency.toUpperCase() },
+//       { qrImageUrl, bank },
+//       { new: true, upsert: true } 
+//     )
+
+//     res.status(200).json({ message: "Payment method is updated/added successfully", updatedPayment })
+
+//   } catch (error) {
+    
+//     fs.unlinkSync(qrImageUrl)
+//     res.status(500).json({ message: 'Error updating/adding payment method', error })
+//   }
+// }
