@@ -18,14 +18,7 @@ export const getAllRates = async (req, res) => {
     }
   
     try {
-      // Check if all currencies exist in the database before updating
-      for (const rate of rates) {
-        const { currency } = rate;
-        const existedInExchange = await Exchange.findOne({ currency: currency.toUpperCase() });
-        if (!existedInExchange) {
-          return res.status(404).json({ message: `Please add currency ${currency} in the Exchange Rate` });
-        }
-      }
+
   
       const updateRate = await Promise.all(
         rates.map(async (rate) => {
