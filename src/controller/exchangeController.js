@@ -12,9 +12,19 @@ export const getAllRates = async (req, res) => {
 
 export const updateRateController = async(req,res)=>{
     const {rates} = req.body
+
+    const existedInExchange = await Exchange.findOne({ currency: currency.toUpperCase() });
+if (!existedInExchange) {
+  return res.status(404).json({ message: "Please add that currency in the Exchange Rate" });
+}
+
+
+
     if(!Array.isArray(rates) || rates.length===0){
         return res.status(400).json({message:"Rate array is required"})
     }
+
+
 
     try {
         const updateRate = await Promise.all(
