@@ -27,40 +27,50 @@ export const deletePaymentMethod = async (req, res) => {
 }
 
 
-
-
+import fs from "fs";
+import { Exchange } from "../models/Exchange.js";
+import { Payment } from "../models/Payment.js";
+import { uploadToCloudinary } from "../utils/upload.js"; // assuming you have this
 
 export const upsertPaymentMethod = async (req, res) => {
   console.log("BODY:", req.body);
-  console.log( req.files);
+  console.log("FILES:", req.files);
 
   const { currency, accountName, accountNumber, bankName } = req.body;
 
   let qrImageUrl = "";
-  const qrImageUrl_path = req.files.qrImageUrl?.[0].path;
+  const qrImageUrl_path = req.files.qrImageUrl?.[0]?.path;
 
+  // Validate required fields
   if (!currency || !accountName || !accountNumber || !bankName) {
     return res.status(400).json({ message: "All fields are required" });
   }
 
   try {
-    const existedInExchange = await Exchange.findOne({ currency: currency.toUpperCase() });
+    // Ensure currency exists in the Exchange database
+    let existedInExchange = await Exchange.findOne({ currency: currency.toUpperCase() });
     if (!existedInExchange) {
-      return res.status(404).json({ message: "Please add that currency in the Exchange Rate" });
+      existedInExchange = await Exchange.create({
+        currency: currency.toUpperCase(),
+        buyRate: 0,
+        sellRate: 0,
+        updatedAt: new Date(),
+      });
     }
 
+    // Upload QR image if provided
     if (qrImageUrl_path && fs.existsSync(qrImageUrl_path)) {
-     try {
-       qrImageUrl = await uploadToCloudinary(qrImageUrl_path);
-       
-     } catch (error) {
-      console.log(error);
-      
-      fs.unlink(qrImageUrl_path);
-
-     } // remove local temp file after upload
+      try {
+        qrImageUrl = await uploadToCloudinary(qrImageUrl_path);
+      } catch (error) {
+        console.error("Cloudinary upload error:", error);
+      } finally {
+        // Clean up local file
+        fs.unlinkSync(qrImageUrl_path);
+      }
     }
 
+    // Save payment method
     const bank = { accountName, accountNumber, bankName };
 
     const updatedPayment = await Payment.findOneAndUpdate(
@@ -73,18 +83,81 @@ export const upsertPaymentMethod = async (req, res) => {
       message: "Payment method is updated/added successfully",
       updatedPayment,
     });
+
   } catch (error) {
-    // Clean up temp file if any
+    // Clean up local temp file on failure
     if (qrImageUrl_path && fs.existsSync(qrImageUrl_path)) {
       fs.unlinkSync(qrImageUrl_path);
     }
 
+    console.error("Error updating payment method:", error);
     res.status(500).json({
       message: "Error updating/adding payment method",
       error: error.message,
     });
   }
 };
+
+
+
+
+
+
+// export const upsertPaymentMethod = async (req, res) => {
+//   console.log("BODY:", req.body);
+//   console.log( req.files);
+
+//   const { currency, accountName, accountNumber, bankName } = req.body;
+
+//   let qrImageUrl = "";
+//   const qrImageUrl_path = req.files.qrImageUrl?.[0].path;
+
+//   if (!currency || !accountName || !accountNumber || !bankName) {
+//     return res.status(400).json({ message: "All fields are required" });
+//   }
+
+//   try {
+//     const existedInExchange = await Exchange.findOne({ currency: currency.toUpperCase() });
+//     if (!existedInExchange) {
+//       return res.status(404).json({ message: "Please add that currency in the Exchange Rate" });
+//     }
+
+//     if (qrImageUrl_path && fs.existsSync(qrImageUrl_path)) {
+//      try {
+//        qrImageUrl = await uploadToCloudinary(qrImageUrl_path);
+       
+//      } catch (error) {
+//       console.log(error);
+      
+//       fs.unlink(qrImageUrl_path);
+
+//      } // remove local temp file after upload
+//     }
+
+//     const bank = { accountName, accountNumber, bankName };
+
+//     const updatedPayment = await Payment.findOneAndUpdate(
+//       { currency: currency.toUpperCase() },
+//       { qrImageUrl, bank },
+//       { new: true, upsert: true }
+//     );
+
+//     res.status(200).json({
+//       message: "Payment method is updated/added successfully",
+//       updatedPayment,
+//     });
+//   } catch (error) {
+//     // Clean up temp file if any
+//     if (qrImageUrl_path && fs.existsSync(qrImageUrl_path)) {
+//       fs.unlinkSync(qrImageUrl_path);
+//     }
+
+//     res.status(500).json({
+//       message: "Error updating/adding payment method",
+//       error: error.message,
+//     });
+//   }
+// };
 
 
 // export const upsertPaymentMethod = async (req, res) => {
