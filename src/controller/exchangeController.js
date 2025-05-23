@@ -10,38 +10,41 @@ export const getAllRates = async (req, res) => {
   };
   
 
-export const updateRateController = async(req,res)=>{
-    const {rates} = req.body
-
-    const existedInExchange = await Exchange.findOne({ currency: currency.toUpperCase() });
-if (!existedInExchange) {
-  return res.status(404).json({ message: "Please add that currency in the Exchange Rate" });
-}
-
-
-
-    if(!Array.isArray(rates) || rates.length===0){
-        return res.status(400).json({message:"Rate array is required"})
+  export const updateRateController = async (req, res) => {
+    const { rates } = req.body;
+  
+    if (!Array.isArray(rates) || rates.length === 0) {
+      return res.status(400).json({ message: "Rate array is required" });
     }
-
-
-
+  
     try {
-        const updateRate = await Promise.all(
-            rates.map(async(rate)=>{
-                const {currency, buyRate, sellRate} = rate
-                return await Exchange.findOneAndUpdate(
-                    {currency: currency.toUpperCase()},
-                    {buyRate, sellRate, updatedAt: new Date()},
-                    {upsert: true, new: true}
-                )
-            })
-        )
-        return res.status(200).json({message:"Rates are updated Successfully", updated: updateRate})
+      // Check if all currencies exist in the database before updating
+      for (const rate of rates) {
+        const { currency } = rate;
+        const existedInExchange = await Exchange.findOne({ currency: currency.toUpperCase() });
+        if (!existedInExchange) {
+          return res.status(404).json({ message: `Please add currency ${currency} in the Exchange Rate` });
+        }
+      }
+  
+      const updateRate = await Promise.all(
+        rates.map(async (rate) => {
+          const { currency, buyRate, sellRate } = rate;
+          return await Exchange.findOneAndUpdate(
+            { currency: currency.toUpperCase() },
+            { buyRate, sellRate, updatedAt: new Date() },
+            { upsert: true, new: true }
+          );
+        })
+      );
+  
+      return res.status(200).json({ message: "Rates are updated Successfully", updated: updateRate });
     } catch (error) {
-        return res.status(500).json({message:"Error at updating rates"})
+      console.error("Error updating rates:", error);
+      return res.status(500).json({ message: "Error at updating rates" });
     }
-}
+  };
+  
 
 export const buyController = async(req,res)=>{
     try {
