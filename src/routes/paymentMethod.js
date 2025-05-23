@@ -6,7 +6,7 @@ const paymentRoute = Router()
 
 paymentRoute.get("/:currency",getPaymentMethodByCurrency)
 paymentRoute.delete("/:currency",deletePaymentMethod)
-paymentRoute.put("/update",
+paymentRoute.post("/update",
     upload.fields([
         {name:"qrImageUrl",maxCount:1}
     ])

@@ -32,7 +32,7 @@ export const deletePaymentMethod = async (req, res) => {
 
 export const upsertPaymentMethod = async (req, res) => {
   console.log("BODY:", req.body);
-  console.log("FILES:", req.files);
+  console.log( req.files);
 
   const { currency, accountName, accountNumber, bankName } = req.body;
 
