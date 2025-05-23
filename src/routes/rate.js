@@ -4,7 +4,7 @@ import { buyController, deleteController, getAllRates, sellController, updateRat
 const router = Router()
 
 router.post("/admin/rates",getAllRates)
-router.put("/admin/update_rate", updateRateController)
+router.post("/admin/update_rate", updateRateController)
 router.get("/buy_rate",buyController)
 router.get("/sell_rate", sellController)
 router.delete("/delete-currency/:currency",deleteController)
