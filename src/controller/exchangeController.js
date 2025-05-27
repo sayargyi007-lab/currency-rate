@@ -69,7 +69,7 @@ export const deleteController = async(req, res)=>{
     }
 
     try {
-        const deleteCurrency = await Exchange.findOneAndDelete({currency: currency.toUpperCase()})
+        await Exchange.findOneAndDelete({currency: currency.toUpperCase()})
 
         return res.status(200).json({message:`${currency} is deleted successfully`})
 

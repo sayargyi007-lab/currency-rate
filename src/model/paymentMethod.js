@@ -1,4 +1,4 @@
-import mongoose, { model, Schema } from "mongoose";
+import mongoose, { Schema } from "mongoose";
 
 const bankSchema = new Schema({
     accountName: { 
@@ -32,4 +32,4 @@ const paymentSchmea = new Schema({
     }
 },{timestamps: true})
 
-export const Payment = mongoose.model("Payment", paymentSchmea)
+export const Payment = mongoose.Schema("Payment", paymentSchmea)
