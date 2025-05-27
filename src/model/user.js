@@ -1,6 +1,6 @@
 import mongoose, { Schema } from "mongoose";
 
-const bankSchema = new Schema[
+const bankSchema = new Schema(
     {
         bankOwnerName:{
             type: String,
@@ -16,9 +16,9 @@ const bankSchema = new Schema[
             required: true 
         }
     }
-]
+)
 
-const userSchema = new Schema[
+const userSchema = new Schema(
     {
         fromCurrency:{
             type: String,
@@ -38,8 +38,17 @@ const userSchema = new Schema[
         },
         bankQr:{
             type: String
+        },
+        slipImage: {
+            type: String,
+            required: true
+        },
+        paymentStatus: {
+            type: String,
+            enum: ["pending", "received", "transferred"],
+            default: "pending"
         }
-    }
-]
+    },{timestamps: true}  
+)
 
 export const User = mongoose.Schema("User",userSchema) 
