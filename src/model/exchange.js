@@ -24,4 +24,4 @@ const exchangeSchema = new Schema({
     }
 })
 
-export const Exchange = mongoose.Schema("Exchange",exchangeSchema)
+export const Exchange = mongoose.model("Exchange",exchangeSchema)
