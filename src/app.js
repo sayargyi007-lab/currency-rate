@@ -2,6 +2,8 @@ import express from 'express';
 import cors from 'cors'
 import route from "./routes/rate.js"
 import paymentRoute from "./routes/paymentMethod.js"
+import userRoute from './routes/user.js';
+
 
 const app = express()
 
@@ -25,5 +27,6 @@ app.use(express.static("public"))
 
 app.use("/api",route)
 app.use("/payment",paymentRoute)
+app.use("/user",userRoute)
 
 export {app};

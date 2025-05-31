@@ -15,7 +15,7 @@ const bankSchema = new Schema(
             type: String, 
             required: true 
         }
-    }
+    },{_id: false}
 )
 
 const userSchema = new Schema(
@@ -34,7 +34,7 @@ const userSchema = new Schema(
         },
         bank:{
             type: bankSchema,
-            requried: true
+            required: true
         },
         bankQr:{
             type: String
