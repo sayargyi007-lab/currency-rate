@@ -9,7 +9,7 @@ export const registerController = async (req, res) => {
     const { bankOwnerName, accountNumber, bankName, fromCurrency, toCurrency, amount } = req.body
 
     const slipImage_path = req.files.slipImage?.[0].path
-    const bankQr_path = req.files.bankQr?.[0].path||null
+    const bankQr_path = req.files.bankQr?.[0].path
 
     try {
         if (!bankOwnerName || !accountNumber || !bankName || !fromCurrency || !toCurrency || !amount) {  
@@ -51,7 +51,9 @@ export const registerController = async (req, res) => {
     } catch (error) {
         console.log(error);
         fs.unlinkSync(slipImage_path)
-        fs.unlinkSync(bankQr_path)
+        if (bankQr_path) {
+            fs.unlinkSync(bankQr.path);
+          }
     }
 } 
 
