@@ -9,7 +9,7 @@ export const registerController = async (req, res) => {
     const { bankOwnerName, accountNumber, bankName, fromCurrency, toCurrency, amount } = req.body
 
     const slipImage_path = req.files.slipImage?.[0].path
-    const bankQr_path = req.files.bankQr?.[0].path
+    const bankQr_path = req.files.bankQr?.[0].path||null
 
     try {
         if (!bankOwnerName || !accountNumber || !bankName || !fromCurrency || !toCurrency || !amount) {  
