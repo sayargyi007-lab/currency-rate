@@ -52,7 +52,7 @@ export const registerController = async (req, res) => {
         console.log(error);
         fs.unlinkSync(slipImage_path)
         if (bankQr_path) {
-            fs.unlinkSync(bankQr.path);
+            fs.unlinkSync(bankQr_path);
           }
     }
 } 
