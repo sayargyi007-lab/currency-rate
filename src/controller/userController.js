@@ -19,7 +19,7 @@ export const registerController = async (req, res) => {
 
         let slipImage = ""
         let bankQr = ""
-        if (slipImage_path && bankQr_path) {
+        if (slipImage_path || bankQr_path) {
             slipImage = await uploadToCloudinary(slipImage_path)
             bankQr = await uploadToCloudinary(bankQr_path)
         }
