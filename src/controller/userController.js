@@ -113,6 +113,25 @@ export const receivePayment = async (req,res) =>{
     }
 }
 
+export const notReceivedPayment = async (req,res) =>{
+    const {id} = req.params
+
+    const existedUser = await User.findById(id)
+    if(!existedUser){
+        return res.status(404).json({message:"User not found"})
+
+    }
+    try {
+        const user = await User.findByIdAndUpdate(id,{
+            paymentStatus: "Not Received"
+        },{new: true})
+        return res.status(200).json({message:"Transferred Payment", user})
+    } catch (error) {
+        return res.status(500).json({message: "Error at showing transferring payment"})
+    }
+}
+
+
 export const transferPayment = async (req,res) =>{
     const {id} = req.params
 

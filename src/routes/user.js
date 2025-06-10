@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { upload } from "../middlewares/multer-storage.js";
-import { deleteUser, getAllUser, receivePayment, registerController, showUserController, transferPayment } from "../controller/userController.js";
+import { deleteUser, getAllUser, notReceivedPayment, receivePayment, registerController, showUserController, transferPayment } from "../controller/userController.js";
 
 const userRoute = Router()
 
@@ -13,6 +13,7 @@ userRoute.get("/:id",showUserController)
 
 userRoute.delete("/delete/:id",deleteUser)
 userRoute.patch("/:id/receive-payment",receivePayment)
+userRoute.patch("/:id/error-payment",notReceivedPayment)
 userRoute.patch("/:id/transfer-payment",transferPayment)
 
 export default userRoute
