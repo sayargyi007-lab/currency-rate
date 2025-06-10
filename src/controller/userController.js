@@ -70,6 +70,18 @@ export const showUserController = async (req,res)=>{
     }
 }
 
+export const getAllUser = async(req,res)=>{
+    try {
+        const existed = await User.findById().select("-paymentStatus")
+        if(!existed){
+            return res.status(404).json({message:"No User Found"})
+        }
+        return res.status(200).json(existed)
+    } catch (error) {
+        return res.status(500).json({message:"Error at finding user"})
+    }
+}
+
 export const deleteUser= async (req,res)=>{
     const {id} = req.params
 
