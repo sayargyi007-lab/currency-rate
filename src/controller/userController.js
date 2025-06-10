@@ -1,4 +1,4 @@
-import { log } from "console";
+
 import { User } from "../model/user.js";
 import { uploadToCloudinary } from "../utils/cloudinary.js";
 import fs from "fs"
@@ -72,13 +72,14 @@ export const showUserController = async (req,res)=>{
 
 export const getAllUser = async(req,res)=>{
     try {
-        const existed = await User.findById().select("-paymentStatus")
+        const existed = await User.find().select("-paymentStatus")
         if(!existed){
             return res.status(404).json({message:"No User Found"})
         }
         return res.status(200).json(existed)
     } catch (error) {
-        return res.status(500).json({message:"Error at finding user"})
+        console.log("cannot get users" ,error)
+        return res.status(500).json({message:"Error at getting users"})
     }
 }
 
