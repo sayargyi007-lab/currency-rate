@@ -72,7 +72,7 @@ export const showUserController = async (req,res)=>{
 
 export const getAllUser = async(req,res)=>{
     try {
-        const existed = await User.find().select("-paymentStatus")
+        const existed = await User.find()
         if(!existed){
             return res.status(404).json({message:"No User Found"})
         }
