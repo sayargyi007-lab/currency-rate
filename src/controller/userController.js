@@ -60,7 +60,7 @@ export const registerController = async (req, res) => {
 export const showUserController = async (req,res)=>{
     const {id} = req.params
     try {
-        const existed = await User.findById(id).select("-paymentStatus")
+        const existed = await User.findById(id)
         if(!existed){
             return res.status(404).json({message:"No User Found"})
         }

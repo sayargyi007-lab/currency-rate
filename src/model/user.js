@@ -45,7 +45,7 @@ const userSchema = new Schema(
         },
         paymentStatus: {
             type: String,
-            enum: ["pending", "received", "transferred"],
+            enum: ["pending", "received", "not-received", "transferred"],
             default: "pending"
         }
     },{timestamps: true}  
