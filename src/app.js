@@ -7,7 +7,7 @@ import userRoute from './routes/user.js';
 
 const app = express()
 
-const allowedOrigins = [process.env.ORIGIN, 'http://localhost:5173'];
+const allowedOrigins = [process.env.ORIGIN, 'http://localhost:5173', 'https://money-exchange-frontend-rose.vercel.app'];
 
 app.use(cors({
   origin: function (origin, callback) {
